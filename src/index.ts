@@ -16,7 +16,7 @@ app.get('/map', (req, res) => {
 ws.on('connection', socket => {
   console.log('connected');
   socket.on('message', message => {
-    console.log('Received: %s', message);
+    console.log('Received:', message);
     socket.send(`Echo '${message}'`);
   });
   socket.send(JSON.stringify({ version: process.env.npm_package_version }));
