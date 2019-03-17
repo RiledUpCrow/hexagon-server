@@ -1,10 +1,11 @@
 import EngineData from './EngineData';
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
+import { Connection } from 'typeorm';
 
 export default class EngineRegistry {
   protected engines: EngineData[] = [];
 
-  public constructor() {}
+  public constructor(protected connection: Connection) {}
 
   public registerSocket = (
     id: string,

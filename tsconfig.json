@@ -5,7 +5,9 @@
     "lib": ["es2017"],
     "sourceMap": true,
     "outDir": "build",
-    "allowSyntheticDefaultImports": true
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "include": ["src/**/*.ts"]
 }

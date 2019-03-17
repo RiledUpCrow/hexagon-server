@@ -1,5 +1,5 @@
 import { RegisterEngineMessage } from '../EngineMessage';
-import * as Joi from 'joi';
+import Joi from 'joi';
 
 const parseRegisterMessage = (message: any): RegisterEngineMessage => {
   const schema = Joi.object().keys({

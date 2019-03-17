@@ -1,4 +1,4 @@
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
 import EngineRegistry from './EngineRegistry';
 import EngineData from './EngineData';
 import parseRegisterMessage from './messageParser/parseRegisterMessage';
