@@ -57,6 +57,14 @@ class EngineHandler {
         // TODO: do something here...
       }
     });
+
+    socket.on('close', () => {
+      if (!engineData) {
+        return;
+      }
+      console.log('engine disconnected:', engineData.id);
+      this.engineRegistry.unregisterSocket(engineData.id);
+    });
   };
 }
 
