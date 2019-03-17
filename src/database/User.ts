@@ -1,16 +1,23 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import Token from './Token';
 
 @Entity()
 export default class User {
   @PrimaryGeneratedColumn()
-  public readonly id: number;
+  public id: number;
 
   @Column()
-  public readonly name: string;
+  public name: string;
 
   @Column()
-  public readonly email: string;
+  public email: string;
+
+  @Column({ nullable: true })
+  public photo: string;
 
   @Column()
-  public readonly photo: string;
+  public password: string;
+
+  @OneToMany(type => Token, token => token.user) // eslint-disable-line @typescript-eslint/no-unused-vars
+  public tokens: Token[];
 }

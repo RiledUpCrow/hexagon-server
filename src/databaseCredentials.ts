@@ -1,5 +1,6 @@
 import User from './database/User';
 import { ConnectionOptions } from 'typeorm';
+import Token from './database/Token';
 
 const databaseCredentials: ConnectionOptions = {
   type: (process.env.DB_TYPE as any) || 'mysql',
@@ -8,7 +9,7 @@ const databaseCredentials: ConnectionOptions = {
   username: process.env.DB_USER || 'root',
   password: process.env.DB_PASS || '',
   database: process.env.DB_NAME || 'hexagon',
-  entities: [User],
+  entities: [User, Token],
   synchronize: true,
   logging: false,
 };
