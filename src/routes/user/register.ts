@@ -52,12 +52,13 @@ const register = (connection: Connection): Handler => async (req, res) => {
     const tokenEntity = new Token();
     tokenEntity.token = token;
     tokenEntity.user = user;
-    user.tokens = [tokenEntity];
 
     await connection.manager.save([user, tokenEntity]);
 
     res.send({ token });
+    console.log(`User '${name}' registered`);
   } catch (error) {
+    console.error(error);
     res.status(500);
     res.end({
       message: 'Internal server error',
