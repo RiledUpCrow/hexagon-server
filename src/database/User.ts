@@ -1,5 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToMany,
+} from 'typeorm';
 import Token from './Token';
+import Engine from './Engine';
+import Game from './Game';
 
 @Entity()
 export default class User {
@@ -18,6 +27,12 @@ export default class User {
   @Column()
   public password: string;
 
-  @OneToMany(type => Token, token => token.user) // eslint-disable-line @typescript-eslint/no-unused-vars
+  @OneToMany(type => Token, token => token.user)
   public tokens: Token[];
+
+  @ManyToMany(type => Engine, engine => engine.admins)
+  public engines: Engine[];
+
+  @ManyToMany(type => Game, game => game.players)
+  public games: Game[];
 }
