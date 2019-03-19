@@ -7,6 +7,9 @@ import EngineRegistry from './EngineRegistry';
 import { createConnection } from 'typeorm';
 import databaseCredentials from './databaseCredentials';
 import userRouter from './routes/user/userRouter';
+import engineRouter from './routes/engine/engineRouter';
+
+console.log('Starting the engine');
 
 const app = express();
 const server = http.createServer(app);
@@ -20,6 +23,7 @@ createConnection(databaseCredentials).then(connection => {
   const engineHandler = new EngineHandler(engineRegistry);
 
   app.use('/user', userRouter(connection));
+  app.use('/engine', engineRouter(connection));
 
   app.get('/map', (req, res) => {
     res.send([]);

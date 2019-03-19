@@ -5,6 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
   ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import Engine from './Engine';
 import User from './User';
@@ -19,6 +20,6 @@ export default class Game {
   public engine: Engine;
 
   @ManyToMany(type => User, user => user.games)
-  @JoinColumn()
+  @JoinTable()
   public players: User[];
 }

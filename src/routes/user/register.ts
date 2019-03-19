@@ -52,6 +52,7 @@ const register = (connection: Connection): Handler => async (req, res) => {
     const tokenEntity = new Token();
     tokenEntity.token = token;
     tokenEntity.user = user;
+    user.tokens = [tokenEntity];
 
     await connection.manager.save([user, tokenEntity]);
 
