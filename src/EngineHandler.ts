@@ -29,11 +29,11 @@ class EngineHandler {
     }, TIMEOUT);
 
     // handle incomming messages
-    socket.on('message', data => {
+    socket.on('message', async data => {
       try {
         const message = JSON.parse(data.toString());
         if (engineData) {
-          console.log('message from', engineData.id);
+          console.log('message from', engineData.entity.engineId);
           // TODO: handle message
         } else {
           console.log('incoming registration');
@@ -43,7 +43,7 @@ class EngineHandler {
           if (!validateVersion(version)) {
             throw new Error('version not supported');
           }
-          engineData = this.engineRegistry.registerSocket(
+          engineData = await this.engineRegistry.registerSocket(
             id,
             adminToken,
             socket,
@@ -62,8 +62,8 @@ class EngineHandler {
       if (!engineData) {
         return;
       }
-      console.log('engine disconnected:', engineData.id);
-      this.engineRegistry.unregisterSocket(engineData.id);
+      console.log('engine disconnected:', engineData.entity.engineId);
+      this.engineRegistry.unregisterSocket(engineData.entity.engineId);
     });
   };
 }
