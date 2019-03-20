@@ -3,6 +3,8 @@ import bodyParser from 'body-parser';
 import { Connection } from 'typeorm';
 import register from './register';
 import login from './login';
+import data from './data';
+import userMiddleware from './userMiddleware';
 
 const userRouter = (connection: Connection): Router => {
   const router = Router();
@@ -11,6 +13,10 @@ const userRouter = (connection: Connection): Router => {
 
   router.post('/register', register(connection));
   router.post('/login', login(connection));
+
+  router.use(userMiddleware(connection));
+
+  router.get('/data', data(connection));
 
   return router;
 };
