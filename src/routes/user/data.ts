@@ -1,8 +1,8 @@
-import { Connection } from 'typeorm';
 import { Handler } from 'express';
+import Container from '../../Container';
 import User from '../../database/User';
 
-const data = (connection: Connection): Handler => async (req, res) => {
+const data = (container: Container): Handler => async (req, res) => {
   const user = req.user;
 
   if (!user) {
@@ -18,7 +18,7 @@ const data = (connection: Connection): Handler => async (req, res) => {
     photo,
     engines: enginesRaw,
     games: gamesRaw,
-  } = await connection
+  } = await container.connection
     .getRepository(User)
     .findOne(user.id, { relations: ['tokens', 'engines', 'games'] });
 

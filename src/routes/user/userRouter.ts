@@ -1,22 +1,22 @@
-import { Router } from 'express';
 import bodyParser from 'body-parser';
-import { Connection } from 'typeorm';
-import register from './register';
-import login from './login';
+import { Router } from 'express';
+import Container from '../../Container';
 import data from './data';
+import login from './login';
+import register from './register';
 import userMiddleware from './userMiddleware';
 
-const userRouter = (connection: Connection): Router => {
+const userRouter = (container: Container): Router => {
   const router = Router();
 
   router.use(bodyParser.json());
 
-  router.post('/register', register(connection));
-  router.post('/login', login(connection));
+  router.post('/register', register(container));
+  router.post('/login', login(container));
 
-  router.use(userMiddleware(connection));
+  router.use(userMiddleware(container));
 
-  router.get('/data', data(connection));
+  router.get('/data', data(container));
 
   return router;
 };

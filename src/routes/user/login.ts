@@ -1,11 +1,11 @@
-import { Connection } from 'typeorm';
+import bcrypt from 'bcrypt';
 import { Handler, Response } from 'express';
 import Joi from 'joi';
-import bcrypt from 'bcrypt';
 import nanoid from 'nanoid';
-import { nameConstraint, passwordConstraint } from './userConstraints';
-import User from '../../database/User';
+import Container from '../../Container';
 import Token from '../../database/Token';
+import User from '../../database/User';
+import { nameConstraint, passwordConstraint } from './userConstraints';
 
 const wrongCredentials = (res: Response): void => {
   res.status(400);
@@ -14,7 +14,7 @@ const wrongCredentials = (res: Response): void => {
   });
 };
 
-const login = (connection: Connection): Handler => async (req, res) => {
+const login = (container: Container): Handler => async (req, res) => {
   try {
     const schema = Joi.object().keys({
       name: nameConstraint.required(),
@@ -30,7 +30,9 @@ const login = (connection: Connection): Handler => async (req, res) => {
     }
     const { name, password } = value;
 
-    const user = await connection.getRepository(User).findOne({ name });
+    const user = await container.connection
+      .getRepository(User)
+      .findOne({ name });
     if (!user) {
       return wrongCredentials(res);
     }
@@ -45,7 +47,7 @@ const login = (connection: Connection): Handler => async (req, res) => {
     tokenEntity.token = token;
     tokenEntity.user = user;
 
-    await connection.manager.save([user, tokenEntity]);
+    await container.connection.manager.save([user, tokenEntity]);
 
     res.send({ token });
     console.log(`User '${name}' logged in`);

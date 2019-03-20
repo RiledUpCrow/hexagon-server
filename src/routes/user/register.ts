@@ -1,17 +1,17 @@
-import { Handler } from 'express';
-import { Connection } from 'typeorm';
-import nanoid from 'nanoid';
-import User from '../../database/User';
 import bcrypt from 'bcrypt';
+import { Handler } from 'express';
 import Joi from 'joi';
+import nanoid from 'nanoid';
+import Container from '../../Container';
 import Token from '../../database/Token';
+import User from '../../database/User';
 import {
   emailConstraint,
   nameConstraint,
   passwordConstraint,
 } from './userConstraints';
 
-const register = (connection: Connection): Handler => async (req, res) => {
+const register = (container: Container): Handler => async (req, res) => {
   try {
     const schema = Joi.object().keys({
       email: emailConstraint.required(),
@@ -29,7 +29,7 @@ const register = (connection: Connection): Handler => async (req, res) => {
 
     const { email, name, password } = value;
 
-    const existingUser = await connection.manager.findOne(User, {
+    const existingUser = await container.connection.manager.findOne(User, {
       where: { name },
     });
 
@@ -54,7 +54,7 @@ const register = (connection: Connection): Handler => async (req, res) => {
     tokenEntity.user = user;
     user.tokens = [tokenEntity];
 
-    await connection.manager.save([user, tokenEntity]);
+    await container.connection.manager.save([user, tokenEntity]);
 
     res.send({ token });
     console.log(`User '${name}' registered`);

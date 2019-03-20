@@ -1,13 +1,12 @@
 import express from 'express';
-import request from 'request';
 import http from 'http';
-import WebSocket from 'ws';
-import EngineHandler from './EngineHandler';
-import EngineRegistry from './EngineRegistry';
+import request from 'request';
 import { createConnection } from 'typeorm';
+import WebSocket from 'ws';
+import Container from './Container';
 import databaseCredentials from './databaseCredentials';
-import userRouter from './routes/user/userRouter';
 import engineRouter from './routes/engine/engineRouter';
+import userRouter from './routes/user/userRouter';
 
 console.log('Starting the engine');
 
@@ -19,17 +18,16 @@ const port = process.env.PORT || 80;
 const frontendUrl = process.env.FRONTEND || 'http://localhost:3000';
 
 createConnection(databaseCredentials).then(connection => {
-  const engineRegistry = new EngineRegistry(connection);
-  const engineHandler = new EngineHandler(engineRegistry);
+  const container = new Container(connection);
 
-  app.use('/user', userRouter(connection));
-  app.use('/engine', engineRouter(connection));
+  app.use('/user', userRouter(container));
+  app.use('/engine', engineRouter(container));
 
   app.get('/map', (req, res) => {
     res.send([]);
   });
 
-  ws.on('connection', engineHandler.handleConnection);
+  ws.on('connection', container.engineHandler.handleConnection);
 
   app.all('*', (req, res) => {
     const url = frontendUrl + req.url;

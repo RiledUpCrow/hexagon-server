@@ -2,8 +2,9 @@ import { Connection } from 'typeorm';
 import { Handler } from 'express';
 import Joi from 'joi';
 import Engine from '../../database/Engine';
+import Container from '../../Container';
 
-const claim = (connection: Connection): Handler => async (req, res) => {
+const claim = (container: Container): Handler => async (req, res) => {
   try {
     const user = req.user;
 
@@ -30,7 +31,7 @@ const claim = (connection: Connection): Handler => async (req, res) => {
     }
     const { adminToken } = value;
 
-    const engine = await connection
+    const engine = await container.connection
       .getRepository(Engine)
       .findOne({ where: { adminToken }, relations: ['admins'] });
 
@@ -44,7 +45,7 @@ const claim = (connection: Connection): Handler => async (req, res) => {
 
     engine.admins = [...engine.admins, user];
 
-    connection.manager.save(engine);
+    await container.connection.manager.save(engine);
     console.log(`User ${user.name} has claimed engine ${engine.engineId}`);
     res.send();
   } catch (error) {

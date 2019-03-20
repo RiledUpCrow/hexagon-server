@@ -1,8 +1,8 @@
 import { Handler } from 'express';
-import { Connection } from 'typeorm';
 import Token from '../../database/Token';
+import Container from '../../Container';
 
-export default (connection: Connection): Handler => async (req, res, next) => {
+export default (container: Container): Handler => async (req, res, next) => {
   const bearer = req.headers.authorization;
 
   // no authorization header, continue without user
@@ -21,7 +21,7 @@ export default (connection: Connection): Handler => async (req, res, next) => {
 
   const token = bearer.substr('Bearer '.length);
 
-  const entity = await connection
+  const entity = await container.connection
     .getRepository(Token)
     .findOne({ where: { token }, relations: ['user'] });
 
