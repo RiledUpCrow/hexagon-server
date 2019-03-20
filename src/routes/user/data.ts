@@ -24,8 +24,9 @@ const data = (container: Container): Handler => async (req, res) => {
 
   const profile = { name, photo };
   const engines = enginesRaw.map(e => {
-    const { id } = e;
-    return { id };
+    const { engineId: id } = e;
+    const engineData = container.engineRegistry.getEngine(id);
+    return { id, online: engineData !== undefined };
   });
   const games = gamesRaw.map(g => {
     const { id, players } = g;

@@ -8,6 +8,10 @@ export default class EngineRegistry {
 
   public constructor(protected connection: Connection) {}
 
+  public getEngine = (id: string): EngineData | undefined => {
+    return this.engines.find(e => e.entity.engineId === id);
+  };
+
   public registerSocket = async (
     id: string,
     adminToken: string,
