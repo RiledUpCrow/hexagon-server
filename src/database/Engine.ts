@@ -4,7 +4,6 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToMany,
-  JoinColumn,
   OneToMany,
   JoinTable,
 } from 'typeorm';
@@ -21,6 +20,9 @@ export default class Engine {
 
   @Column()
   public adminToken: string;
+
+  @Column()
+  public open: boolean;
 
   @ManyToMany(type => User, admin => admin.engines)
   @JoinTable()

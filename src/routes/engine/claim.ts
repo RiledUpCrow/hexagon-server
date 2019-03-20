@@ -1,8 +1,7 @@
-import { Connection } from 'typeorm';
 import { Handler } from 'express';
 import Joi from 'joi';
-import Engine from '../../database/Engine';
 import Container from '../../Container';
+import Engine from '../../database/Engine';
 
 const claim = (container: Container): Handler => async (req, res) => {
   try {
