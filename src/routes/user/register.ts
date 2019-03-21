@@ -10,6 +10,7 @@ import {
   nameConstraint,
   passwordConstraint,
 } from './userConstraints';
+import getProfile from './getProfile';
 
 const register = (container: Container): Handler => async (req, res) => {
   try {
@@ -48,6 +49,8 @@ const register = (container: Container): Handler => async (req, res) => {
     user.name = name;
     user.email = email;
     user.password = hash;
+    user.engines = [];
+    user.games = [];
 
     const tokenEntity = new Token();
     tokenEntity.token = token;
@@ -56,7 +59,9 @@ const register = (container: Container): Handler => async (req, res) => {
 
     await container.connection.manager.save([user, tokenEntity]);
 
-    res.send({ token });
+    const profile = getProfile(container.engineRegistry)(user);
+
+    res.send({ token, user: profile });
     console.log(`User '${name}' registered`);
   } catch (error) {
     console.error(error);

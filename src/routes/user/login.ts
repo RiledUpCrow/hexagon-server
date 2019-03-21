@@ -6,6 +6,7 @@ import Container from '../../Container';
 import Token from '../../database/Token';
 import User from '../../database/User';
 import { nameConstraint, passwordConstraint } from './userConstraints';
+import getProfile from './getProfile';
 
 const wrongCredentials = (res: Response): void => {
   res.status(400);
@@ -32,7 +33,7 @@ const login = (container: Container): Handler => async (req, res) => {
 
     const user = await container.connection
       .getRepository(User)
-      .findOne({ name });
+      .findOne({ name }, { relations: ['engines', 'games'] });
     if (!user) {
       return wrongCredentials(res);
     }
@@ -49,7 +50,9 @@ const login = (container: Container): Handler => async (req, res) => {
 
     await container.connection.manager.save([user, tokenEntity]);
 
-    res.send({ token });
+    const profile = getProfile(container.engineRegistry)(user);
+
+    res.send({ token, user: profile });
     console.log(`User '${name}' logged in`);
   } catch (error) {
     console.error(error);

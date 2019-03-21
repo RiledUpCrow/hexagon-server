@@ -23,7 +23,10 @@ export default (container: Container): Handler => async (req, res, next) => {
 
   const entity = await container.connection
     .getRepository(Token)
-    .findOne({ where: { token }, relations: ['user'] });
+    .findOne({
+      where: { token },
+      relations: ['user', 'user.engines', 'user.games'],
+    });
 
   if (!entity) {
     res.status(400);

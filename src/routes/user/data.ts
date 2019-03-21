@@ -1,6 +1,6 @@
 import { Handler } from 'express';
 import Container from '../../Container';
-import User from '../../database/User';
+import getProfile from './getProfile';
 
 const data = (container: Container): Handler => async (req, res) => {
   try {
@@ -14,28 +14,7 @@ const data = (container: Container): Handler => async (req, res) => {
       return;
     }
 
-    const {
-      name,
-      photo,
-      engines: enginesRaw,
-      games: gamesRaw,
-    } = await container.connection
-      .getRepository(User)
-      .findOne(user.id, { relations: ['tokens', 'engines', 'games'] });
-
-    const profile = { name, photo };
-    const engines = enginesRaw.map(e => {
-      const { engineId: id } = e;
-      const engineData = container.engineRegistry.getEngine(id);
-      return { id, online: engineData !== undefined };
-    });
-    const games = gamesRaw.map(g => {
-      const { gameId: id } = g;
-      return {
-        id,
-      };
-    });
-    const result = { profile, engines, games };
+    const result = getProfile(container.engineRegistry)(user);
 
     res.send(result);
   } catch (error) {
