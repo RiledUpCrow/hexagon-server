@@ -61,7 +61,7 @@ const register = (container: Container): Handler => async (req, res) => {
 
     const profile = getProfile(container.engineRegistry)(user);
 
-    res.send({ token, user: profile });
+    res.send({ token, profile });
     console.log(`User '${name}' registered`);
   } catch (error) {
     console.error(error);

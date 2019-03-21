@@ -52,7 +52,7 @@ const login = (container: Container): Handler => async (req, res) => {
 
     const profile = getProfile(container.engineRegistry)(user);
 
-    res.send({ token, user: profile });
+    res.send({ token, profile });
     console.log(`User '${name}' logged in`);
   } catch (error) {
     console.error(error);
