@@ -5,7 +5,6 @@ import nanoid from 'nanoid';
 import Container from '../../Container';
 import Token from '../../database/Token';
 import User from '../../database/User';
-import { nameConstraint, passwordConstraint } from './userConstraints';
 import getProfile from './getProfile';
 
 const wrongCredentials = (res: Response): void => {
@@ -18,8 +17,8 @@ const wrongCredentials = (res: Response): void => {
 const login = (container: Container): Handler => async (req, res) => {
   try {
     const schema = Joi.object().keys({
-      name: nameConstraint.required(),
-      password: passwordConstraint.required(),
+      name: Joi.string().required(),
+      password: Joi.string().required(),
     });
     const { error, value } = schema.validate(req.body);
     if (error) {
