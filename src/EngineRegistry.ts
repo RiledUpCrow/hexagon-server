@@ -28,6 +28,7 @@ export default class EngineRegistry {
       entity = new Engine();
       entity.adminToken = adminToken;
       entity.engineId = id;
+      entity.open = false;
       entity.admins = [];
       entity.games = [];
       await this.connection.manager.save(entity);

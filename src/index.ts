@@ -1,6 +1,5 @@
 import express from 'express';
 import http from 'http';
-import request from 'request';
 import { createConnection } from 'typeorm';
 import WebSocket from 'ws';
 import Container from './Container';
