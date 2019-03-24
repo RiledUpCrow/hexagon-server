@@ -43,6 +43,13 @@ const claim = (container: Container): Handler => async (req, res) => {
       return;
     }
 
+    if (engine.admins.find(a => a.id === user.id)) {
+      res.status(400);
+      res.send({
+        message: 'You have already claimed this engine',
+      });
+    }
+
     engine.admins = [...engine.admins, user];
 
     await container.connection.manager.save(engine);
