@@ -1,17 +1,14 @@
 import { Handler } from 'express';
 import Joi from 'joi';
 import Container from '../../Container';
+import ClientError from '../error/ClientError';
 
-const abandon = (container: Container): Handler => async (req, res) => {
+const abandon = (container: Container): Handler => async (req, res, next) => {
   try {
     const user = req.user;
 
     if (!user) {
-      res.status(400);
-      res.send({
-        message: 'You need to be logged in',
-      });
-      return;
+      return next(new ClientError('You must be logged in', 401));
     }
 
     const schema = Joi.object().keys({
@@ -21,11 +18,8 @@ const abandon = (container: Container): Handler => async (req, res) => {
     });
     const { error, value } = schema.validate(req.body);
     if (error) {
-      res.status(400);
-      res.send({
-        message: error.message,
-      });
-      return;
+      const errors = error.details.map(d => d.message).join(', ');
+      return next(new ClientError(`Invalid param: ${errors}`));
     }
     const { id } = value;
 
@@ -33,10 +27,7 @@ const abandon = (container: Container): Handler => async (req, res) => {
 
     if (engineIndex < 0) {
       res.status(400);
-      res.send({
-        message: 'Invalid ID',
-      });
-      return;
+      return next(new ClientError('Invalid ID'));
     }
 
     const engine = user.engines.splice(engineIndex, 1)[0];
@@ -46,10 +37,7 @@ const abandon = (container: Container): Handler => async (req, res) => {
     res.send();
   } catch (error) {
     console.error(error);
-    res.status(500);
-    res.send({
-      message: 'Internal server error',
-    });
+    next(error);
   }
 };
 

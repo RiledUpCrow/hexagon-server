@@ -2,18 +2,15 @@ import { Handler } from 'express';
 import Joi from 'joi';
 import Container from '../../Container';
 import Engine from '../../database/Engine';
+import ClientError from '../error/ClientError';
 import getEngine from './getEngine';
 
-const claim = (container: Container): Handler => async (req, res) => {
+const claim = (container: Container): Handler => async (req, res, next) => {
   try {
     const user = req.user;
 
     if (!user) {
-      res.status(400);
-      res.send({
-        message: 'You need to be logged in',
-      });
-      return;
+      return next(new ClientError('You must be logged in', 401));
     }
 
     const schema = Joi.object().keys({
@@ -23,11 +20,8 @@ const claim = (container: Container): Handler => async (req, res) => {
     });
     const { error, value } = schema.validate(req.body);
     if (error) {
-      res.status(400);
-      res.send({
-        message: error.message,
-      });
-      return;
+      const errors = error.details.map(d => d.message).join(', ');
+      return next(new ClientError(`Invalid JSON schema: ${errors}`));
     }
     const { adminToken } = value;
 
@@ -36,18 +30,11 @@ const claim = (container: Container): Handler => async (req, res) => {
       .findOne({ where: { adminToken }, relations: ['admins'] });
 
     if (!engine) {
-      res.status(400);
-      res.send({
-        message: 'Invalid token',
-      });
-      return;
+      return next(new ClientError('Invalid token'));
     }
 
     if (engine.admins.find(a => a.id === user.id)) {
-      res.status(400);
-      res.send({
-        message: 'You have already claimed this engine',
-      });
+      return next(new ClientError('You have already claimed this engine'));
     }
 
     engine.admins = [...engine.admins, user];
@@ -57,10 +44,7 @@ const claim = (container: Container): Handler => async (req, res) => {
     res.send(getEngine(container.engineRegistry)(engine));
   } catch (error) {
     console.error(error);
-    res.status(500);
-    res.send({
-      message: 'Internal server error',
-    });
+    next(error);
   }
 };
 

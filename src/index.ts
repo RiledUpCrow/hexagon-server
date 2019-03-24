@@ -5,7 +5,9 @@ import WebSocket from 'ws';
 import Container from './Container';
 import databaseCredentials from './databaseCredentials';
 import engineRouter from './routes/engine/engineRouter';
+import errorHandler from './routes/error/errorHandler';
 import userRouter from './routes/user/userRouter';
+import notFoundHandler from './routes/error/notFoundHandler';
 
 console.log('Starting the engine');
 
@@ -20,6 +22,8 @@ createConnection(databaseCredentials).then(connection => {
 
   app.use('/api/user', userRouter(container));
   app.use('/api/engine', engineRouter(container));
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 
   ws.on('connection', container.engineHandler.handleConnection);
 

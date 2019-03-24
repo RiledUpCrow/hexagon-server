@@ -1,17 +1,14 @@
 import { Handler } from 'express';
 import Container from '../../Container';
 import getProfile from './getProfile';
+import ClientError from '../error/ClientError';
 
-const data = (container: Container): Handler => async (req, res) => {
+const data = (container: Container): Handler => async (req, res, next) => {
   try {
     const user = req.user;
 
     if (!user) {
-      res.status(400);
-      res.send({
-        message: 'You must be logged in',
-      });
-      return;
+      return next(new ClientError('You must be logged in', 401));
     }
 
     const result = getProfile(container.engineRegistry)(user);
@@ -19,10 +16,7 @@ const data = (container: Container): Handler => async (req, res) => {
     res.send(result);
   } catch (error) {
     console.error(error);
-    res.status(500);
-    res.send({
-      message: 'Internal server error',
-    });
+    next(error);
   }
 };
 

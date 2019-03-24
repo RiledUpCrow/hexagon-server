@@ -11,8 +11,9 @@ import {
   passwordConstraint,
 } from './userConstraints';
 import getProfile from './getProfile';
+import ClientError from '../error/ClientError';
 
-const register = (container: Container): Handler => async (req, res) => {
+const register = (container: Container): Handler => async (req, res, next) => {
   try {
     const schema = Joi.object().keys({
       email: emailConstraint.required(),
@@ -21,11 +22,8 @@ const register = (container: Container): Handler => async (req, res) => {
     });
     const { value, error } = schema.validate(req.body);
     if (error) {
-      res.status(400);
-      res.send({
-        message: error.message,
-      });
-      return;
+      const errors = error.details.map(d => d.message).join(', ');
+      return next(new ClientError(`Invalid JSON schema: ${errors}`));
     }
 
     const { email, name, password } = value;
@@ -35,11 +33,7 @@ const register = (container: Container): Handler => async (req, res) => {
     });
 
     if (existingUser) {
-      res.status(400);
-      res.send({
-        message: 'User already exists',
-      });
-      return;
+      return next(new ClientError('User already exists'));
     }
 
     const hash = await bcrypt.hash(password, 12);
@@ -65,10 +59,7 @@ const register = (container: Container): Handler => async (req, res) => {
     console.log(`User '${name}' registered`);
   } catch (error) {
     console.error(error);
-    res.status(500);
-    res.end({
-      message: 'Internal server error',
-    });
+    next(error);
   }
 };
 

@@ -1,6 +1,7 @@
 import { Handler } from 'express';
-import Token from '../../database/Token';
 import Container from '../../Container';
+import Token from '../../database/Token';
+import ClientError from '../error/ClientError';
 
 export default (container: Container): Handler => async (req, res, next) => {
   const bearer = req.headers.authorization;
@@ -12,28 +13,18 @@ export default (container: Container): Handler => async (req, res, next) => {
 
   // incorrect authorization header
   if (!bearer.startsWith('Bearer')) {
-    res.status(400);
-    res.send({
-      message: 'Only Bearer authorization is supported',
-    });
-    return;
+    return next(new ClientError('Only Bearer authorization is supported'));
   }
 
   const token = bearer.substr('Bearer '.length);
 
-  const entity = await container.connection
-    .getRepository(Token)
-    .findOne({
-      where: { token },
-      relations: ['user', 'user.engines', 'user.games'],
-    });
+  const entity = await container.connection.getRepository(Token).findOne({
+    where: { token },
+    relations: ['user', 'user.engines', 'user.games'],
+  });
 
   if (!entity) {
-    res.status(400);
-    res.send({
-      message: 'Invalid token',
-    });
-    return;
+    return next(new ClientError('Invalid token'));
   }
 
   req.user = entity.user;

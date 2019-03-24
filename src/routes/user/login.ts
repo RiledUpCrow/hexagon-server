@@ -6,15 +6,9 @@ import Container from '../../Container';
 import Token from '../../database/Token';
 import User from '../../database/User';
 import getProfile from './getProfile';
+import ClientError from '../error/ClientError';
 
-const wrongCredentials = (res: Response): void => {
-  res.status(400);
-  res.send({
-    message: 'Wrong credentials',
-  });
-};
-
-const login = (container: Container): Handler => async (req, res) => {
+const login = (container: Container): Handler => async (req, res, next) => {
   try {
     const schema = Joi.object().keys({
       name: Joi.string().required(),
@@ -22,11 +16,8 @@ const login = (container: Container): Handler => async (req, res) => {
     });
     const { error, value } = schema.validate(req.body);
     if (error) {
-      res.status(400);
-      res.send({
-        message: error.message,
-      });
-      return;
+      const errors = error.details.map(d => d.message).join(', ');
+      return next(new ClientError(`Invalid JSON schema: ${errors}`));
     }
     const { name, password } = value;
 
@@ -34,12 +25,12 @@ const login = (container: Container): Handler => async (req, res) => {
       .getRepository(User)
       .findOne({ name }, { relations: ['engines', 'games'] });
     if (!user) {
-      return wrongCredentials(res);
+      return next(new ClientError('Wrong credentials'));
     }
 
     const result = await bcrypt.compare(password, user.password);
     if (!result) {
-      return wrongCredentials(res);
+      return next(new ClientError('Wrong credentials'));
     }
 
     const token = await nanoid(48);
@@ -55,10 +46,7 @@ const login = (container: Container): Handler => async (req, res) => {
     console.log(`User '${name}' logged in`);
   } catch (error) {
     console.error(error);
-    res.status(500);
-    res.send({
-      message: 'Internal server error',
-    });
+    next(error);
   }
 };
 
