@@ -2,6 +2,7 @@ import EngineData from './EngineData';
 import WebSocket from 'ws';
 import { Connection } from 'typeorm';
 import Engine from './database/Engine';
+import { randanimal } from 'randanimal';
 
 export default class EngineRegistry {
   protected engines: EngineData[] = [];
@@ -28,6 +29,7 @@ export default class EngineRegistry {
       entity = new Engine();
       entity.adminToken = adminToken;
       entity.engineId = id;
+      entity.displayName = await randanimal();
       entity.open = false;
       entity.admins = [];
       entity.games = [];

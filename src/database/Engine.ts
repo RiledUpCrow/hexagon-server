@@ -19,6 +19,9 @@ export default class Engine {
   public engineId: string;
 
   @Column()
+  public displayName: string;
+
+  @Column()
   public adminToken: string;
 
   @Column()
