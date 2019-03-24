@@ -8,7 +8,11 @@ export default (registry: EngineRegistry) => (game: Game) => {
     id: gameId,
     started,
     ended,
-    settings,
+    settings: {
+      maxPlayers: settings.maxPlayers,
+      mapHeight: settings.mapHeight,
+      mapWidth: settings.mapWidth,
+    },
     players: players.map(p => p.name),
     online: engineData !== undefined,
   };
