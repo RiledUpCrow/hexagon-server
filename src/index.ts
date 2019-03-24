@@ -6,8 +6,9 @@ import Container from './Container';
 import databaseCredentials from './databaseCredentials';
 import engineRouter from './routes/engine/engineRouter';
 import errorHandler from './routes/error/errorHandler';
-import userRouter from './routes/user/userRouter';
 import notFoundHandler from './routes/error/notFoundHandler';
+import gameRouter from './routes/game/gameRouter';
+import userRouter from './routes/user/userRouter';
 
 console.log('Starting the engine');
 
@@ -17,11 +18,15 @@ const ws = new WebSocket.Server({ server, path: '/socket' });
 
 const port = process.env.PORT || 80;
 
+// TODO hash adminTokens in the database
+// TODO create secure token for engine authentication
+
 createConnection(databaseCredentials).then(connection => {
   const container = new Container(connection);
 
   app.use('/api/user', userRouter(container));
   app.use('/api/engine', engineRouter(container));
+  app.use('/api/game', gameRouter(container));
   app.use(notFoundHandler);
   app.use(errorHandler);
 
