@@ -1,12 +1,13 @@
 import bcrypt from 'bcrypt';
-import { Handler, Response } from 'express';
+import crypto from 'crypto';
+import { Handler } from 'express';
 import Joi from 'joi';
 import nanoid from 'nanoid';
 import Container from '../../Container';
 import Token from '../../database/Token';
 import User from '../../database/User';
-import getProfile from './getProfile';
 import ClientError from '../error/ClientError';
+import getProfile from './getProfile';
 
 const login = (container: Container): Handler => async (req, res, next) => {
   try {
@@ -21,9 +22,18 @@ const login = (container: Container): Handler => async (req, res, next) => {
     }
     const { name, password } = value;
 
-    const user = await container.connection
-      .getRepository(User)
-      .findOne({ name }, { relations: ['engines', 'games'] });
+    const user = await container.connection.getRepository(User).findOne(
+      { name },
+      {
+        relations: [
+          'engines',
+          'games',
+          'games.settings',
+          'games.players',
+          'games.engine',
+        ],
+      },
+    );
     if (!user) {
       return next(new ClientError('Wrong credentials'));
     }
@@ -34,8 +44,12 @@ const login = (container: Container): Handler => async (req, res, next) => {
     }
 
     const token = await nanoid(48);
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
     const tokenEntity = new Token();
-    tokenEntity.token = token;
+    tokenEntity.token = hashedToken;
     tokenEntity.user = user;
 
     await container.connection.manager.save([user, tokenEntity]);

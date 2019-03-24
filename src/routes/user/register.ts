@@ -12,6 +12,7 @@ import {
 } from './userConstraints';
 import getProfile from './getProfile';
 import ClientError from '../error/ClientError';
+import crypto from 'crypto';
 
 const register = (container: Container): Handler => async (req, res, next) => {
   try {
@@ -38,6 +39,10 @@ const register = (container: Container): Handler => async (req, res, next) => {
 
     const hash = await bcrypt.hash(password, 12);
     const token = await nanoid(48);
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
 
     const user = new User();
     user.name = name;
@@ -47,7 +52,7 @@ const register = (container: Container): Handler => async (req, res, next) => {
     user.games = [];
 
     const tokenEntity = new Token();
-    tokenEntity.token = token;
+    tokenEntity.token = hashedToken;
     tokenEntity.user = user;
     user.tokens = [tokenEntity];
 

@@ -2,6 +2,7 @@ import { Handler } from 'express';
 import Container from '../../Container';
 import Token from '../../database/Token';
 import ClientError from '../error/ClientError';
+import crypto from 'crypto';
 
 export default (container: Container): Handler => async (req, res, next) => {
   const bearer = req.headers.authorization;
@@ -17,9 +18,13 @@ export default (container: Container): Handler => async (req, res, next) => {
   }
 
   const token = bearer.substr('Bearer '.length);
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(token)
+    .digest('hex');
 
   const entity = await container.connection.getRepository(Token).findOne({
-    where: { token },
+    where: { token: hashedToken },
     relations: [
       'user',
       'user.engines',
