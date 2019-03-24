@@ -2,6 +2,7 @@ import { Handler } from 'express';
 import Joi from 'joi';
 import Container from '../../Container';
 import Engine from '../../database/Engine';
+import getEngine from './getEngine';
 
 const claim = (container: Container): Handler => async (req, res) => {
   try {
@@ -46,7 +47,7 @@ const claim = (container: Container): Handler => async (req, res) => {
 
     await container.connection.manager.save(engine);
     console.log(`User ${user.name} has claimed engine ${engine.engineId}`);
-    res.send();
+    res.send(getEngine(container.engineRegistry)(engine));
   } catch (error) {
     console.error(error);
     res.status(500);
