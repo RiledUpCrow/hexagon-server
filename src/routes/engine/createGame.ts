@@ -7,6 +7,7 @@ import Game from '../../database/Game';
 import Settings from '../../database/Settings';
 import nanoid from 'nanoid';
 import ClientError from '../error/ClientError';
+import getGame from './getGame';
 
 const createGame = (container: Container): Handler => async (
   req,
@@ -79,12 +80,14 @@ const createGame = (container: Container): Handler => async (
     game.players = [user];
     game.settings = settings;
 
-    const [savedGame] = await container.connection.manager.save([
-      game,
-      settings,
-    ]);
+    await container.connection.manager.save([game, settings]);
 
-    res.send({ gameId: savedGame.id });
+    console.log(
+      `Game ${game.gameId} created on engine ${engineId} for player ${
+        user.name
+      }`,
+    );
+    res.send(getGame(container.engineRegistry)(game));
   } catch (error) {
     console.error(error);
     next(error);

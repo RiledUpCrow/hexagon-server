@@ -20,7 +20,14 @@ export default (container: Container): Handler => async (req, res, next) => {
 
   const entity = await container.connection.getRepository(Token).findOne({
     where: { token },
-    relations: ['user', 'user.engines', 'user.games'],
+    relations: [
+      'user',
+      'user.engines',
+      'user.games',
+      'user.games.settings',
+      'user.games.players',
+      'user.games.engine',
+    ],
   });
 
   if (!entity) {

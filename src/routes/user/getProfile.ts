@@ -7,6 +7,6 @@ export default (engineRegistry: EngineRegistry) => (user: User) => {
   const { name, photo, engines: enginesRaw, games: gamesRaw } = user;
 
   const engines = enginesRaw.map(getEngine(engineRegistry));
-  const games = gamesRaw.map(getGame());
+  const games = gamesRaw.map(getGame(engineRegistry));
   return { name, photo, engines, games };
 };
