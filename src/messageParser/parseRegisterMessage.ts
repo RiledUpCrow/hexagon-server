@@ -22,7 +22,7 @@ const parseRegisterMessage = (message: any): RegisterEngineMessage => {
   const { error, value } = schema.validate(message);
 
   if (error) {
-    throw new Error('invalid message');
+    throw new Error('Invalid message');
   }
 
   return value;

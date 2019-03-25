@@ -31,9 +31,8 @@ const socketRequest = (socket: WebSocket, data: any): Promise<any> => {
 
       socket.send(
         JSON.stringify({
-          type: 'client_message',
-          requestId,
-          data,
+          id: requestId,
+          content: data,
         }),
       );
 
@@ -41,10 +40,10 @@ const socketRequest = (socket: WebSocket, data: any): Promise<any> => {
         try {
           const json = JSON.parse(message);
           const schema = Joi.object().keys({
-            responseId: Joi.string()
+            id: Joi.string()
               .alphanum()
               .required(),
-            data: Joi.any().required(),
+            content: Joi.any().required(),
           });
 
           const { value, error } = schema.validate(json);
@@ -53,11 +52,11 @@ const socketRequest = (socket: WebSocket, data: any): Promise<any> => {
             throw new ClientError('Engine returned malformed data');
           }
 
-          if (value.responseId !== requestId) {
+          if (value.id !== requestId) {
             return;
           }
 
-          const data = value.data;
+          const data = value.content;
           off({ data });
         } catch (error) {
           off({ error });
