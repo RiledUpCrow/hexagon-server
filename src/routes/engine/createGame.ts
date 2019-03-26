@@ -8,6 +8,7 @@ import Settings from '../../database/Settings';
 import nanoid from 'nanoid';
 import ClientError from '../error/ClientError';
 import getGame from './getGame';
+import socketRequest from '../game/socketRequest';
 
 const createGame = (container: Container): Handler => async (
   req,
@@ -68,6 +69,16 @@ const createGame = (container: Container): Handler => async (
     }
 
     const { maxPlayers, mapWidth, mapHeight } = value;
+
+    const response = await socketRequest(engineData.socket, {
+      type: 'createGame',
+      data: value,
+    });
+
+    if (response.type !== 'success') {
+      return next(new ClientError('Engine failed to create a game'));
+    }
+
     const settings = new Settings();
     settings.mapHeight = mapHeight;
     settings.mapWidth = mapWidth;

@@ -1,9 +1,14 @@
 import Joi from 'joi';
 import nanoid from 'nanoid';
 import WebSocket from 'ws';
+import { RequestContent } from '../../message/RequestContent';
 import ClientError from '../error/ClientError';
 
-const socketRequest = (socket: WebSocket, data: any): Promise<any> => {
+const socketRequest = (
+  socket: WebSocket,
+  data: RequestContent,
+  timeoutMs: number = 10 * 1000,
+): Promise<any> => {
   const result = new Promise(async (resolve, reject) => {
     try {
       const timeout: { current?: NodeJS.Timeout } = {};
@@ -40,9 +45,7 @@ const socketRequest = (socket: WebSocket, data: any): Promise<any> => {
         try {
           const json = JSON.parse(message);
           const schema = Joi.object().keys({
-            id: Joi.string()
-              .alphanum()
-              .required(),
+            id: Joi.string().required(),
             content: Joi.any().required(),
           });
 
@@ -66,7 +69,7 @@ const socketRequest = (socket: WebSocket, data: any): Promise<any> => {
       socket.on('message', listener.current);
       timeout.current = setTimeout(
         () => off({ error: new ClientError('Engine timeout') }),
-        10 * 1000,
+        timeoutMs,
       );
     } catch (error) {
       reject(error);

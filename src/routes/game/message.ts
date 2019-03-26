@@ -43,12 +43,24 @@ const message = (container: Container): Handler => async (req, res, next) => {
     const { socket } = engine;
 
     const result = await socketRequest(socket, {
-      type: 'client_request',
-      game: gameId,
+      type: 'clientMessage',
       data: req.body,
     });
 
-    res.send(result);
+    const schema = Joi.object().keys({
+      type: Joi.allow('clientResponse').required(),
+      data: Joi.any().required(),
+    });
+
+    const { value: responseValue, error: responseError } = schema.validate(
+      result,
+    );
+
+    if (responseError) {
+      return next(new ClientError('Engine failed to respond'));
+    }
+
+    res.send(responseValue.data);
   } catch (error) {
     console.error(error);
     next(error);

@@ -1,11 +1,8 @@
 import WebSocket from 'ws';
 import EngineRegistry from './EngineRegistry';
-import EngineData from './EngineData';
-import parseRegisterMessage from './messageParser/parseRegisterMessage';
+import parseRegisterMessage from './message/parseRegisterMessage';
 import validateVersion from './validateVersion';
 import socketRequest from './routes/game/socketRequest';
-
-const TIMEOUT = 5000;
 
 class EngineHandler {
   public constructor(protected engineRegistry: EngineRegistry) {}
