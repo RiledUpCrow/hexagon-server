@@ -8,8 +8,7 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "typeRoots": ["./node_modules/@types", "./typings"],
-    "resolveJsonModule": true
+    "typeRoots": ["./node_modules/@types", "./typings"]
   },
   "include": ["src/**/*.ts"]
 }
