@@ -3,6 +3,7 @@ import EngineRegistry from './EngineRegistry';
 import parseRegisterMessage from './message/parseRegisterMessage';
 import validateVersion from './validateVersion';
 import socketRequest from './routes/game/socketRequest';
+import pack from '../package.json';
 
 class EngineHandler {
   public constructor(protected engineRegistry: EngineRegistry) {}
@@ -27,7 +28,7 @@ class EngineHandler {
       const response = await socketRequest(socket, {
         type: 'version',
         data: {
-          version: process.env.npm_package_version,
+          version: pack.version,
         },
       });
       // expect a register message
