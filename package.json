@@ -9,7 +9,7 @@
     "clean": "rimraf ./build",
     "prebuild": "npm run clean",
     "build": "tsc",
-    "start": "node --inspect=localhost:5858 --nolazy -r ts-node/register src/index.ts",
+    "start": "node --inspect=localhost:5858 --nolazy -r ts-node/register/transpile-only src/index.ts",
     "dev": "nodemon --watch",
     "test": "jest",
     "test:coverage": "jest --coverage",
