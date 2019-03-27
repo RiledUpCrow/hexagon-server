@@ -16,24 +16,24 @@ import User from './User';
 @Entity()
 export default class Game {
   @PrimaryGeneratedColumn()
-  public id: number;
+  public id!: number;
 
   @Column()
-  public gameId: string;
+  public gameId!: string;
 
   @ManyToOne(type => Engine, engine => engine.games, { nullable: false })
   @JoinColumn()
-  public engine: Engine;
+  public engine!: Engine;
 
   @OneToOne(type => Settings)
   @JoinColumn()
-  public settings: Settings;
+  public settings!: Settings;
 
   @Column()
-  public started: boolean;
+  public started!: boolean;
 
   @Column()
-  public ended: boolean;
+  public ended!: boolean;
 
   @ManyToOne(type => User, { nullable: true })
   @JoinColumn()
@@ -41,5 +41,5 @@ export default class Game {
 
   @ManyToMany(type => User, user => user.games)
   @JoinTable()
-  public players: User[];
+  public players!: User[];
 }

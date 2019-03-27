@@ -13,26 +13,26 @@ import Game from './Game';
 @Entity()
 export default class User {
   @PrimaryGeneratedColumn()
-  public id: number;
+  public id!: number;
 
   @Column()
-  public name: string;
+  public name!: string;
 
   @Column()
-  public email: string;
+  public email!: string;
 
   @Column({ nullable: true })
-  public photo: string;
+  public photo!: string;
 
   @Column()
-  public password: string;
+  public password!: string;
 
   @OneToMany(type => Token, token => token.user)
-  public tokens: Token[];
+  public tokens!: Token[];
 
   @ManyToMany(type => Engine, engine => engine.admins)
-  public engines: Engine[];
+  public engines!: Engine[];
 
   @ManyToMany(type => Game, game => game.players)
-  public games: Game[];
+  public games!: Game[];
 }

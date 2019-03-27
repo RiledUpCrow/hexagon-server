@@ -11,12 +11,12 @@ import User from './User';
 @Entity()
 export default class Token {
   @PrimaryGeneratedColumn()
-  public id: number;
+  public id!: number;
 
   @Column()
-  public token: string;
+  public token!: string;
 
   @ManyToOne(type => User, user => user.tokens)
   @JoinColumn()
-  public user: User;
+  public user!: User;
 }

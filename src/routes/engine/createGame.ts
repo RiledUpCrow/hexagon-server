@@ -2,7 +2,6 @@ import { Handler } from 'express';
 import Joi from 'joi';
 import Container from '../../Container';
 import Engine from '../../database/Engine';
-import User from '../../database/User';
 import Game from '../../database/Game';
 import Settings from '../../database/Settings';
 import nanoid from 'nanoid';
@@ -36,10 +35,7 @@ const createGame = (container: Container): Handler => async (
       return next(new ClientError('Invalid engine ID'));
     }
 
-    const entireUser = await container.connection
-      .getRepository(User)
-      .findOne(user.id, { relations: ['engines'] });
-    if (!entireUser.engines.find(e => e.engineId === engineId)) {
+    if (!user.engines.find(e => e.engineId === engineId)) {
       return next(new ClientError('Invalid engine ID'));
     }
 

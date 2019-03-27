@@ -3,6 +3,7 @@ import EngineRegistry from './EngineRegistry';
 import parseRegisterMessage from './message/parseRegisterMessage';
 import validateVersion from './validateVersion';
 import socketRequest from './routes/game/socketRequest';
+import EngineData from './EngineData';
 
 class EngineHandler {
   public constructor(protected engineRegistry: EngineRegistry) {}
@@ -12,7 +13,7 @@ class EngineHandler {
    * @param socket the WebSocket of the server
    */
   public handleConnection = async (socket: WebSocket) => {
-    let engineData = null;
+    let engineData: EngineData | null = null;
 
     socket.on('close', () => {
       if (!engineData) {

@@ -9,7 +9,7 @@ export default (container: Container): Handler => async (req, res, next) => {
 
   // no authorization header, continue without user
   if (!bearer) {
-    next();
+    return next();
   }
 
   // incorrect authorization header
