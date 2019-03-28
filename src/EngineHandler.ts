@@ -33,13 +33,15 @@ class EngineHandler {
       });
       // expect a register message
       const { data } = parseRegisterMessage(response);
-      const { id, adminToken, version } = data;
+      const { id, name, adminToken, authToken, version } = data;
       if (!validateVersion(version)) {
         throw new Error('Version not supported');
       }
       engineData = await this.engineRegistry.registerSocket(
         id,
+        name,
         adminToken,
+        authToken,
         socket,
       );
       console.log('Registered with id', id);

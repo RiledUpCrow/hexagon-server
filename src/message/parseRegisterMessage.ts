@@ -11,7 +11,11 @@ const parseRegisterMessage = (message: any): RegisterEngineMessage => {
         id: Joi.string()
           .token()
           .required(),
+        name: Joi.string().required(),
         adminToken: Joi.string()
+          .token()
+          .required(),
+        authToken: Joi.string()
           .token()
           .required(),
         version: Joi.string().required(),

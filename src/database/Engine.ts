@@ -25,6 +25,9 @@ export default class Engine {
   public adminToken!: string;
 
   @Column()
+  public authToken!: string;
+
+  @Column()
   public open!: boolean;
 
   @ManyToMany(type => User, admin => admin.engines)
