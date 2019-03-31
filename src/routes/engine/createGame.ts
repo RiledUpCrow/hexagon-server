@@ -64,11 +64,13 @@ const createGame = (container: Container): Handler => async (
       return next(new ClientError(`Invalid JSON schema: ${errors}`));
     }
 
+    const id = await nanoid(24);
+
     const { maxPlayers, mapWidth, mapHeight } = value;
 
     const response = await socketRequest(engineData.socket, {
       type: 'createGame',
-      data: value,
+      data: { id, maxPlayers, mapWidth, mapHeight },
     });
 
     if (response.type !== 'success') {
@@ -80,7 +82,7 @@ const createGame = (container: Container): Handler => async (
     settings.mapWidth = mapWidth;
     settings.maxPlayers = maxPlayers;
     const game = new Game();
-    game.gameId = await nanoid(24);
+    game.gameId = id;
     game.started = false;
     game.ended = false;
     game.engine = engine;
