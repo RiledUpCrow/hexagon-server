@@ -1,9 +1,15 @@
 import CreateGame from './CreateGame';
 import Version from './Version';
 
+interface ClientMessageContent {
+  gameId: string;
+  playerId: string;
+  content: any;
+}
+
 interface ClientMessageRequest {
   type: 'clientMessage';
-  data: any;
+  data: ClientMessageContent;
 }
 
 interface VersionRequest {

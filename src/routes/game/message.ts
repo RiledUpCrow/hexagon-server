@@ -44,7 +44,11 @@ const message = (container: Container): Handler => async (req, res, next) => {
 
     const result = await socketRequest(socket, {
       type: 'clientMessage',
-      data: req.body,
+      data: {
+        gameId: game.gameId,
+        playerId: user.name,
+        content: req.body,
+      },
     });
 
     const schema = Joi.object().keys({
