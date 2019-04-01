@@ -21,6 +21,9 @@ export default class Game {
   @Column()
   public gameId!: string;
 
+  @Column()
+  public displayName!: string;
+
   @ManyToOne(type => Engine, engine => engine.games, { nullable: false })
   @JoinColumn()
   public engine!: Engine;
@@ -42,4 +45,8 @@ export default class Game {
   @ManyToMany(type => User, user => user.games)
   @JoinTable()
   public players!: User[];
+
+  @ManyToOne(type => User)
+  @JoinColumn()
+  public owner!: User;
 }

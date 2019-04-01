@@ -1,13 +1,14 @@
 import { Handler } from 'express';
 import Joi from 'joi';
+import nanoid from 'nanoid';
+import { randanimal } from 'randanimal';
 import Container from '../../Container';
 import Engine from '../../database/Engine';
 import Game from '../../database/Game';
 import Settings from '../../database/Settings';
-import nanoid from 'nanoid';
 import ClientError from '../error/ClientError';
-import getGame from './getGame';
 import socketRequest from '../game/socketRequest';
+import getGame from './getGame';
 
 const createGame = (container: Container): Handler => async (
   req,
@@ -68,6 +69,20 @@ const createGame = (container: Container): Handler => async (
 
     const { maxPlayers, mapWidth, mapHeight } = value;
 
+    const settings = new Settings();
+    settings.mapHeight = mapHeight;
+    settings.mapWidth = mapWidth;
+    settings.maxPlayers = maxPlayers;
+    const game = new Game();
+    game.gameId = id;
+    game.displayName = await randanimal();
+    game.started = false;
+    game.ended = false;
+    game.engine = engine;
+    game.players = [user];
+    game.owner = user;
+    game.settings = settings;
+
     const response = await socketRequest(engineData.socket, {
       type: 'createGame',
       data: { id, maxPlayers, mapWidth, mapHeight },
@@ -76,18 +91,6 @@ const createGame = (container: Container): Handler => async (
     if (response.type !== 'success') {
       return next(new ClientError('Engine failed to create a game'));
     }
-
-    const settings = new Settings();
-    settings.mapHeight = mapHeight;
-    settings.mapWidth = mapWidth;
-    settings.maxPlayers = maxPlayers;
-    const game = new Game();
-    game.gameId = id;
-    game.started = false;
-    game.ended = false;
-    game.engine = engine;
-    game.players = [user];
-    game.settings = settings;
 
     await container.connection.manager.save([game, settings]);
 

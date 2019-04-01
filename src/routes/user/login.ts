@@ -31,6 +31,8 @@ const login = (container: Container): Handler => async (req, res, next) => {
           'games.settings',
           'games.players',
           'games.engine',
+          'games.activePlayer',
+          'games.owner',
         ],
       },
     );

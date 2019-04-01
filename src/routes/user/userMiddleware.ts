@@ -32,6 +32,8 @@ export default (container: Container): Handler => async (req, res, next) => {
       'user.games.settings',
       'user.games.players',
       'user.games.engine',
+      'user.games.activePlayer',
+      'user.games.owner',
     ],
   });
 
