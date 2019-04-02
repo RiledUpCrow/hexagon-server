@@ -39,7 +39,7 @@ const renameGame = (container: Container): Handler => async (
       name: Joi.string()
         .min(3)
         .max(24)
-        .regex(/^[a-zA-Z0-9\-_]*$/)
+        .regex(/^[a-zA-Z0-9\-_\ ]*$/)
         .required(),
     });
 
