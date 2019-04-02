@@ -58,7 +58,7 @@ const register = (container: Container): Handler => async (req, res, next) => {
 
     await container.connection.manager.save([user, tokenEntity]);
 
-    const profile = getProfile(container.engineRegistry)(user);
+    const profile = getProfile(container)(user);
 
     res.send({ token, profile });
     console.log(`User '${name}' registered`);
