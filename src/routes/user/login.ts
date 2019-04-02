@@ -22,20 +22,9 @@ const login = (container: Container): Handler => async (req, res, next) => {
     }
     const { name, password } = value;
 
-    const user = await container.connection.getRepository(User).findOne(
-      { name },
-      {
-        relations: [
-          'engines',
-          'games',
-          'games.settings',
-          'games.players',
-          'games.engine',
-          'games.activePlayer',
-          'games.owner',
-        ],
-      },
-    );
+    const user = await container.connection
+      .getRepository(User)
+      .findOne({ name });
     if (!user) {
       return next(new ClientError('Wrong credentials'));
     }
@@ -56,7 +45,7 @@ const login = (container: Container): Handler => async (req, res, next) => {
 
     await container.connection.manager.save([user, tokenEntity]);
 
-    const profile = getProfile(container.engineRegistry)(user);
+    const profile = await getProfile(container)(user);
 
     res.send({ token, profile });
     console.log(`User '${name}' logged in`);

@@ -11,7 +11,7 @@ const data = (container: Container): Handler => async (req, res, next) => {
       return next(new ClientError('You must be logged in', 401));
     }
 
-    const result = getProfile(container.engineRegistry)(user);
+    const result = await getProfile(container)(user);
 
     res.send(result);
   } catch (error) {
