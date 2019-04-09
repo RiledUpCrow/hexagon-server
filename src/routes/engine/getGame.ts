@@ -1,7 +1,23 @@
 import Game from '../../database/Game';
 import EngineRegistry from '../../EngineRegistry';
 
-export default (registry: EngineRegistry) => (game: Game) => {
+export interface GameResponse {
+  id: string;
+  displayName: string;
+  started: boolean;
+  ended: boolean;
+  settings: {
+    maxPlayers: number;
+    mapHeight: number;
+    mapWidth: number;
+  };
+  players: string[];
+  activePlayer: string | null;
+  owner: string;
+  online: boolean;
+}
+
+export default (registry: EngineRegistry) => (game: Game): GameResponse => {
   const {
     gameId,
     displayName,

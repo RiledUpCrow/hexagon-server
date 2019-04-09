@@ -1,7 +1,14 @@
 import Container from '../../Container';
 import User from '../../database/User';
-import getEngine from '../engine/getEngine';
-import getGame from '../engine/getGame';
+import getEngine, { EngineResponse } from '../engine/getEngine';
+import getGame, { GameResponse } from '../engine/getGame';
+
+export interface ProfileResponse {
+  name: string;
+  photo: string | null;
+  engines: EngineResponse[];
+  games: GameResponse[];
+}
 
 export default (container: Container) => async (partialUser: User) => {
   const user = await container.connection
@@ -27,8 +34,18 @@ export default (container: Container) => async (partialUser: User) => {
 
   const { name, photo, engines: enginesRaw, games: gamesRaw } = user!;
 
-  const engines = enginesRaw.map(getEngine(container.engineRegistry));
-  const games = gamesRaw.map(getGame(container.engineRegistry));
+  const engines: EngineResponse[] = [];
+  const games: GameResponse[] = [];
 
-  return { name, photo, engines, games };
+  enginesRaw.map(getEngine(container.engineRegistry)).forEach(([e, g]) => {
+    engines.push(e);
+    games.push(...g);
+  });
+
+  gamesRaw
+    .filter(gr => !games.find(g => g.id === gr.gameId))
+    .map(getGame(container.engineRegistry))
+    .forEach(g => games.push(g));
+
+  return { name, photo: !photo ? null : photo, engines, games };
 };
