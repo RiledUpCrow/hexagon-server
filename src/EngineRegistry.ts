@@ -3,6 +3,7 @@ import { Connection } from 'typeorm';
 import WebSocket from 'ws';
 import Engine from './database/Engine';
 import EngineData from './EngineData';
+import { randanimal } from 'randanimal';
 
 export default class EngineRegistry {
   protected engines: EngineData[] = [];
@@ -15,7 +16,6 @@ export default class EngineRegistry {
 
   public registerSocket = async (
     id: string,
-    name: string,
     adminToken: string,
     authToken: string,
     socket: WebSocket,
@@ -38,7 +38,7 @@ export default class EngineRegistry {
       entity.adminToken = adminToken;
       entity.authToken = hashedToken;
       entity.engineId = id;
-      entity.displayName = name;
+      entity.displayName = await randanimal();
       entity.open = false;
       entity.admins = [];
       entity.games = [];
