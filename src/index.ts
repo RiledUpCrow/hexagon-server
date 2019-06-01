@@ -10,7 +10,7 @@ import notFoundHandler from './routes/error/notFoundHandler';
 import gameRouter from './routes/game/gameRouter';
 import userRouter from './routes/user/userRouter';
 
-console.log('Starting the engine');
+console.log('Starting the server');
 
 const app = express();
 const server = http.createServer(app);
