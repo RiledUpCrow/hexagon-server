@@ -4,6 +4,7 @@ import Container from '../../Container';
 import userMiddleware from '../user/userMiddleware';
 import message from './message';
 import editGame from './editGame';
+import getInvite from './getInvite';
 
 const gameRouter = (container: Container): Router => {
   const router = Router();
@@ -13,6 +14,7 @@ const gameRouter = (container: Container): Router => {
 
   router.post('/message/:gameId', message(container));
   router.post('/rename/:gameId', editGame(container));
+  router.get('/invite/:gameId', getInvite(container));
 
   return router;
 };

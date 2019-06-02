@@ -49,4 +49,7 @@ export default class Game {
   @ManyToOne(type => User)
   @JoinColumn()
   public owner!: User;
+
+  @Column()
+  public invite!: string;
 }
