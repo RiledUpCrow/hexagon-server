@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 import EngineRegistry from './EngineRegistry';
 import parseRegisterMessage from './message/parseRegisterMessage';
 import validateVersion from './validateVersion';
-import socketRequest from './routes/game/socketRequest';
+import socketRequest from './engine/socketRequest';
 import EngineData from './EngineData';
 
 class EngineHandler {

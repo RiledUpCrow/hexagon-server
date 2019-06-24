@@ -1,8 +1,8 @@
 import Joi from 'joi';
 import nanoid from 'nanoid';
 import WebSocket from 'ws';
-import { RequestContent } from '../../message/RequestContent';
-import ClientError from '../error/ClientError';
+import { RequestContent } from '../message/RequestContent';
+import ClientError from '../routes/error/ClientError';
 
 const socketRequest = (
   socket: WebSocket,

@@ -4,7 +4,7 @@ import Container from '../../Container';
 import Engine from '../../database/Engine';
 import Game from '../../database/Game';
 import ClientError from '../error/ClientError';
-import socketRequest from '../game/socketRequest';
+import socketRequest from '../../engine/socketRequest';
 
 const deleteGame = (container: Container): Handler => async (
   req,

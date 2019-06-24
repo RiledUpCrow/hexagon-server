@@ -3,7 +3,7 @@ import Joi from 'joi';
 import Container from '../../Container';
 import Game from '../../database/Game';
 import ClientError from '../error/ClientError';
-import socketRequest from './socketRequest';
+import socketRequest from '../../engine/socketRequest';
 
 const message = (container: Container): Handler => async (req, res, next) => {
   try {

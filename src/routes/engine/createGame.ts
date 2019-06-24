@@ -7,7 +7,7 @@ import Engine from '../../database/Engine';
 import Game from '../../database/Game';
 import Settings from '../../database/Settings';
 import ClientError from '../error/ClientError';
-import socketRequest from '../game/socketRequest';
+import socketRequest from '../../engine/socketRequest';
 import getGame from './getGame';
 
 const createGame = (container: Container): Handler => async (

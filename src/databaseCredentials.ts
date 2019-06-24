@@ -12,7 +12,14 @@ const databaseCredentials: ConnectionOptions = {
   username: process.env.DB_USER || 'root',
   password: process.env.DB_PASS || '',
   database: process.env.DB_NAME || 'hexagon',
-  entities: [User, Token, Game, Engine, Settings],
+  entities: [
+    __dirname + '/**/*.entity{.ts,.js}',
+    User,
+    Game,
+    Settings,
+    Engine,
+    Token,
+  ],
   synchronize: true,
   logging: false,
 };
