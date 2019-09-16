@@ -1,4 +1,4 @@
-# Build container
+# Development container
 FROM node:10.15 as dev
 ENV NODE_ENV development \
   PORT 80
@@ -8,8 +8,15 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# Building the project
+# Config files
 COPY tsconfig.json nodemon.json .eslintrc.json .prettierrc.json ./
+
+CMD [ "npm", "run", "dev" ]
+
+# Test container
+FROM dev as build
+
+# Building the project
 COPY test ./test
 COPY src ./src
 RUN npm run build
@@ -21,11 +28,11 @@ ENV NODE_ENV production \
   PORT 80
 
 # Installing production dependencies
-COPY --from=dev /app/package.json /app/package-lock.json ./
+COPY package.json package-lock.json ./
 RUN npm install
 
 # Preparing built code to run
-COPY --from=dev /app/build ./build
+COPY --from=build /app/build ./build
 
 # Application port
 EXPOSE ${PORT}
