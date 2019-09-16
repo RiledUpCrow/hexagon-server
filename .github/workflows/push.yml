@@ -46,4 +46,4 @@ jobs:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           USER: ${{ secrets.USER }}
         with:
-          args: ~/deploy-server.sh
+          args: ~/the-world-anew/deploy-server.sh
