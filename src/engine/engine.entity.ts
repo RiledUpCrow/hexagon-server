@@ -8,22 +8,28 @@ import {
 } from 'typeorm';
 import User from '../database/User';
 import Game from '../database/Game';
+import { Exclude, Expose } from 'class-transformer';
 
 @Entity()
 export default class Engine {
   @PrimaryGeneratedColumn()
+  @Exclude()
   public id!: number;
 
   @Column()
+  @Expose({ name: 'id' })
   public engineId!: string;
 
   @Column()
+  @Expose({ name: 'name' })
   public displayName!: string;
 
   @Column()
+  @Exclude()
   public adminToken!: string;
 
   @Column()
+  @Exclude()
   public authToken!: string;
 
   @Column()
