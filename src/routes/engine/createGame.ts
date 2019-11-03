@@ -66,6 +66,7 @@ const createGame = (container: Container): Handler => async (
     }
 
     const id = await nanoid(24);
+    const invite = await nanoid(12);
 
     const { maxPlayers, mapWidth, mapHeight } = value;
 
@@ -82,6 +83,7 @@ const createGame = (container: Container): Handler => async (
     game.players = [user];
     game.owner = user;
     game.settings = settings;
+    game.invite = invite;
 
     const response = await socketRequest(engineData.socket, {
       type: 'createGame',
