@@ -25,10 +25,10 @@ const joinGame = (container: Container): Handler => async (req, res, next) => {
       return next(new ClientError(`Invalid JSON schema: ${errors}`));
     }
 
-    const { token } = value;
+    const { invite } = value;
 
     const game = await container.connection.manager.findOne(Game, {
-      where: { invite: token },
+      where: { invite },
       relations: ['players', 'engine', 'settings', 'activePlayer', 'owner'],
     });
 
