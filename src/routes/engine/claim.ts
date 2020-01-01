@@ -27,7 +27,7 @@ const claim = (container: Container): Handler => async (req, res, next) => {
 
     const engine = await container.connection
       .getRepository(Engine)
-      .findOne({ where: { adminToken }, relations: ['admins'] });
+      .findOne({ where: { adminToken }, relations: ['admins', 'games'] });
 
     if (!engine) {
       return next(new ClientError('Invalid token'));

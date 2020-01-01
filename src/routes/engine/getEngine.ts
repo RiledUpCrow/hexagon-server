@@ -11,7 +11,7 @@ export interface EngineResponse {
 
 export default (engineRegistry: EngineRegistry) => (
   engine: Engine,
-): [EngineResponse, GameResponse[]] => {
+): { engine: EngineResponse; games: GameResponse[] } => {
   const { engineId, displayName, games } = engine;
   const engineData = engineRegistry.getEngine(engineId);
 
@@ -24,5 +24,5 @@ export default (engineRegistry: EngineRegistry) => (
     games: games.map(g => g.gameId),
   };
 
-  return [engineResult, gamesResult];
+  return { engine: engineResult, games: gamesResult };
 };
