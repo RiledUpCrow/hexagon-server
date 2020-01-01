@@ -37,10 +37,12 @@ export default (container: Container) => async (partialUser: User) => {
   const engines: EngineResponse[] = [];
   const games: GameResponse[] = [];
 
-  enginesRaw.map(getEngine(container.engineRegistry)).forEach(([e, g]) => {
-    engines.push(e);
-    games.push(...g);
-  });
+  enginesRaw
+    .map(getEngine(container.engineRegistry))
+    .forEach(({ engine, games }) => {
+      engines.push(engine);
+      games.push(...games);
+    });
 
   gamesRaw
     .filter(gr => !games.find(g => g.id === gr.gameId))
