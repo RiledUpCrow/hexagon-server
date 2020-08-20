@@ -40,7 +40,7 @@
     "typescript": "^3.4.2"
   },
   "dependencies": {
-    "bcrypt": "^3.0.4",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "joi": "^14.3.1",
