@@ -49,7 +49,7 @@
     "randanimal": "^1.0.4",
     "reflect-metadata": "^0.1.13",
     "request": "^2.88.0",
-    "typeorm": "^0.2.15",
+    "typeorm": "^0.2.25",
     "ws": "^6.2.0"
   },
   "jest": {
