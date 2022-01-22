@@ -45,7 +45,7 @@
     "express": "^4.16.4",
     "joi": "^14.3.1",
     "mysql": "^2.16.0",
-    "nanoid": "^2.0.1",
+    "nanoid": "^3.1.31",
     "randanimal": "^1.0.4",
     "reflect-metadata": "^0.1.13",
     "request": "^2.88.0",
