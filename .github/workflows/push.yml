@@ -41,7 +41,7 @@ jobs:
       - name: Build
         run: docker build -t co0sh/hexagon-server:latest .
       - name: Publish
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: co0sh/hexagon-server:latest
           username: ${{ secrets.DOCKER_USERNAME }}
